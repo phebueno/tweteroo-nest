@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Tweet } from './entities/tweet.entity';
+import { error } from 'console';
 
 @Injectable()
 export class AppService {
@@ -25,7 +26,7 @@ export class AppService {
   postTweet(username: string, body:any): any{
     const { tweet } = body;
     const usuarioCadastrado = this.users.find((user) => user.username === username);
-    if (!usuarioCadastrado) throw new Error();
+    if (!usuarioCadastrado) throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
     this.tweets.push(new Tweet(usuarioCadastrado, tweet)) //salva o avatar junto (salva o User como foi requisitado)
     return usuarioCadastrado;
   }
