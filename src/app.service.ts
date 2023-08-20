@@ -13,8 +13,8 @@ export class AppService {
     this.tweets = [];
   }
 
-  getHello(): string {
-    return 'Hello World!';
+  getHealth(): string {
+    return "I'm okay!";
   }
 
   postUser(body: User): number{
@@ -23,8 +23,8 @@ export class AppService {
     return this.users.push(new User(username, avatar));
   }
 
-  postTweet(username: string, body:any): any{
-    const { tweet } = body;
+  postTweet(body:any): any{
+    const { username, tweet } = body;
     const usuarioCadastrado = this.users.find((user) => user.username === username);
     if (!usuarioCadastrado) throw new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
     this.tweets.push(new Tweet(usuarioCadastrado, tweet)) //salva o avatar junto (salva o User como foi requisitado)
@@ -35,12 +35,12 @@ export class AppService {
     let minPage = undefined;
     let maxPage = -15;
     if(page){
-      // inserir erro if(page < 1) res.status(400).send("Informe uma página válida!");
+      if(page < 1) throw new HttpException('Select a valid page!', HttpStatus.BAD_REQUEST);
       maxPage = -(page*15);
       minPage = Number(page) ===1 ? undefined : maxPage+15;
     }
     
-    const newestTenTweets = this.tweets.slice(maxPage, minPage); //adicionar aqui limites de múltiplos de 10
+    const newestTenTweets = this.tweets.reverse().slice(maxPage, minPage); //adicionar aqui limites de múltiplos de 10
     const newestTenTweetsStructure = newestTenTweets.map((t) => ({
       username : t.user.username,
       avatar: t.user.avatar,
@@ -52,7 +52,7 @@ export class AppService {
   }
 
   getUserTweets(username: string): any{
-    const tweetsUser = this.tweets.filter(tweet=>tweet.user.username===username);
+    const tweetsUser = this.tweets.reverse().filter(tweet=>tweet.user.username===username);
     const tweetsUserStructure = tweetsUser.map((t) => ({
       username : t.user.username,
       avatar: t.user.avatar,

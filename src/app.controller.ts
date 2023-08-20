@@ -1,27 +1,29 @@
-import { Body, Controller, Get, Headers, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Headers, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
 import { Tweet } from './entities/tweet.entity';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateTweetDto } from './dtos/create-tweet.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get("/")
+  @HttpCode(200)
+  getHealth(): string {
+    return this.appService.getHealth();
   }
 
   @Post("/sign-up")
   @HttpCode(200)
-  postUser(@Body() body:User): number {
+  postUser(@Body() body:CreateUserDto): number {
     return this.appService.postUser(body);
   }
 
   @Post("/tweets")
-  @HttpCode(200)
-  postTweet(@Headers('user') user: string, @Body() body:any): any {
-    return this.appService.postTweet(user, body);
+  postTweet(@Body() body:CreateTweetDto): any {
+    return this.appService.postTweet(body);
   }
 
   @Get("/tweets")
