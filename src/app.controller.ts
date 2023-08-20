@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
 import { Tweet } from './entities/tweet.entity';
@@ -22,5 +22,11 @@ export class AppController {
   @HttpCode(200)
   postTweet(@Headers('user') user: string, @Body() body:any): any {
     return this.appService.postTweet(user, body);
+  }
+
+  @Get("/tweets")
+  @HttpCode(200)
+  getTweets(@Query('page') page: string): any {
+    return this.appService.getTweets(page);
   }
 }

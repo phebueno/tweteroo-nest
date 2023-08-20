@@ -30,4 +30,24 @@ export class AppService {
     this.tweets.push(new Tweet(usuarioCadastrado, tweet)) //salva o avatar junto (salva o User como foi requisitado)
     return usuarioCadastrado;
   }
+
+  getTweets(page): any{
+    let minPage = undefined;
+    let maxPage = -15;
+    if(page){
+      // inserir erro if(page < 1) res.status(400).send("Informe uma página válida!");
+      maxPage = -(page*15);
+      minPage = Number(page) ===1 ? undefined : maxPage+15;
+    }
+    
+    const newestTenTweets = this.tweets.slice(maxPage, minPage); //adicionar aqui limites de múltiplos de 10
+    const newestTenTweetsStructure = newestTenTweets.map((t) => ({
+      username : t.user.username,
+      avatar: t.user.avatar,
+      tweet: t.tweet,
+       //vai dar erro se o usuário procurado não estiver cadastrado
+    }));
+    
+    return newestTenTweetsStructure; //assim está do mais velho para o mais novo
+  }
 }
