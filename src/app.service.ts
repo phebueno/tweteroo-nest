@@ -50,4 +50,14 @@ export class AppService {
     
     return newestTenTweetsStructure; //assim está do mais velho para o mais novo
   }
+
+  getUserTweets(username: string): any{
+    const tweetsUser = this.tweets.filter(tweet=>tweet.user.username===username);
+    const tweetsUserStructure = tweetsUser.map((t) => ({
+      username : t.user.username,
+      avatar: t.user.avatar,
+      tweet: t.tweet,
+    }));
+    return tweetsUserStructure;
+  }
 }
